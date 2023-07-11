@@ -18,7 +18,7 @@ After(async function () {
 });
 
 Given("user is on {string} page", async function (string) {
-  return await this.page.goto(`https://netology.ru${string}`, {
+  return await this.page.goto(`qamid.tmweb.ru.../index.php${string}`, {
     setTimeout: 20000,
   });
 });

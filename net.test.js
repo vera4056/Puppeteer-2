@@ -12,44 +12,64 @@ afterEach(() => {
   page.close();
 });
 
-describe("Netology.ru tests", () => {
+describe("qamid.tmweb.ru tests", () => {
   beforeEach(async () => {
     page = await browser.newPage();
-    await page.goto("https://netology.ru");
+    await page.goto("http://qamid.tmweb.ru/client/index.php");// перейти на сайт 
   });
 
-  test("The first test'", async () => {
-    const title = await page.title();
-    console.log("Page title: " + title);
-    await clickElement(page, "header a + a");
-    const title2 = await page.title();
-    console.log("Page title: " + title2);
-    const pageList = await browser.newPage();
-    await pageList.goto("https://netology.ru/navigation");
-    await pageList.waitForSelector("h1");
+  test("Should book for a ticket", async () => {
+    const dayPage = await page.$(a.page-nav__day.page-nav__day_weekend.page-nav__day_chosen); // перейти на скнопку дата -конкретный день
+    await dayPage.click(); // кликаем и выбираем конкретный день 
+    const seanceTime = await page.$(a.movie-seances_time); // перейти на кнопку время по указанному селектору
+    await seanceTime.click();
+    const chairBuying = await page.$(span.buying-scheme__chair);// попадаем на страницу бронирования и находим селектор со свободным местом 
+    await chairBuying.click();
+    const booking ="button.acceptin-button"; // селекторы кнопки забронировать
+    await page.waitForSelector(booking, {visible: true, }); // находит кнопку забронировать
+    await booking.click(); // кликаем на кнопку забронировать
+    const actual = await page.$eval(button.acceptin-button, link => link.textContent); // находим селектор кнопки получить код бронирования
+await actual.click();
+await page.waitForSelector("h2.ticket__check-title");
+const title = await page.title();
+    expect(title).toContain("ЭЛЕКТРОННЫЙ БИЛЕТ")
+   });
+
+   test("Should book for a ticket2", async () => {
+    const dayPage = await page.$(a.page-nav__day.page-nav__day_weekend.page-nav__day_chosen); // перейти на скнопку дата -конкретный день
+    await dayPage.click(); // кликаем и выбираем конкретный день 
+    const seanceTime = await page.$(a.movie-seances__time.data-seance-id173); // перейти на кнопку время по указанному селектору
+    await seanceTime.click();
+    const chairBuying1 = await page.$(span.buying-scheme__chair.buying-scheme__chair_standart);// попадаем на страницу бронирования и находим селектор со свободным местом 
+    await chairBuying1.click();
+    const chairBuying2 = await page.$(span.buying-scheme__chair.buying-scheme__chair_standart);// попадаем на страницу бронирования и находим селектор со свободным местом 
+    await chairBuying2.click();
+    const booking ="button.acceptin-button"; // селекторы кнопки забронировать
+    await page.waitForSelector(booking, {visible: true, }); // находит кнопку забронировать
+    await booking.click(); // кликаем на кнопку забронировать
+    const actual = await page.$eval(button.acceptin-button, link => link.textContent); // находим селектор кнопки получить код бронирования
+await actual.click();
+await page.waitForSelector("h2.ticket__check-title");
+const title = await page.title();
+    expect(title).toContain("ЭЛЕКТРОННЫЙ БИЛЕТ")
+   });
   });
 
-  test("The first link text 'Медиа Нетологии'", async () => {
-    const actual = await getText(page, "header a + a");
-    expect(actual).toContain("Медиа Нетологии");
-  });
-
-  test("The first link leads on 'Медиа' page", async () => {
-    await clickElement(page, "header a + a");
-    const actual = await getText(page, ".logo__media");
-    await expect(actual).toContain("Медиа");
-  });
-});
-
-test("Should look for a course", async () => {
-  await page.goto("https://netology.ru/navigation");
-  await putText(page, "input", "тестировщик");
-  const actual = await page.$eval("a[data-name]", (link) => link.textContent);
-  const expected = "Тестировщик ПО";
-  expect(actual).toContain(expected);
-});
-
-test("Should show warning if login is not email", async () => {
-  await page.goto("https://netology.ru/?modal=sign_in");
-  await putText(page, 'input[type="email"]', generateName(5));
-});
+  describe ("Negative booking for a ticket Tests", () => {
+    test("Should book for a ticket", async () => {
+      const dayPage = await page.$(a.page-nav__day.page-nav__day_weekend.page-nav__day_chosen); // перейти на скнопку дата -конкретный день
+      await dayPage.click(); // кликаем и выбираем конкретный день 
+      const seanceTime = await page.$(a.movie-seances_time); // перейти на кнопку время по указанному селектору
+      await seanceTime.click();
+      const chairBuying = await page.$(span.buying-scheme__chair.buying-scheme__chair_disabled);// попадаем на страницу бронирования и находим селектор со свободным местом 
+      await chairBuying.click();
+      const booking ="button.acceptin-button"; // селекторы кнопки забронировать
+      await page.waitForSelector(booking, {visible: false, }); // находит кнопку забронировать в неактивном состоянии
+      await booking.click(); // кликаем на кнопку забронировать и ничего не происход
+      const actual = await page.$eval(button.acceptin-button, link => link.textContent); // тут не должна быть заголовка - получить код бронирования
+  await actual.click();
+  await page.waitForSelector("h2.ticket__check-title");
+  const title = await page.title();
+      expect(title).toContain("ЭЛЕКТРОННЫЙ БИЛЕТ")
+      });
+    });
