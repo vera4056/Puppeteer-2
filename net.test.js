@@ -29,9 +29,9 @@ describe("qamid.tmweb.ru tests", () => {
     await page.waitForSelector(booking, {visible: true, }); // находит кнопку забронировать
     await booking.click(); // кликаем на кнопку забронировать
     const actual = await page.$eval("button.acceptin-button", link => link.textContent); // находим селектор кнопки получить код бронирования
-await actual.click();
-await page.waitForSelector("h2.ticket__check-title");
-const title = await page.title();
+    await actual.click();
+    await page.waitForSelector("h2.ticket__check-title");
+    const title = await page.title();
     expect(title).toContain("ЭЛЕКТРОННЫЙ БИЛЕТ")
    });
 
@@ -53,10 +53,8 @@ const title = await page.title();
     const title = await page.title();
     expect(title).toContain("ЭЛЕКТРОННЫЙ БИЛЕТ")
    });
-  });
-
-
-    test("Should book for a already booked ticket", async () => {
+  
+   test("Should book for a already booked ticket", async () => {
       const dayPage = await page.$("a.page-nav__day.page-nav__day_weekend.page-nav__day_chosen"); // перейти на скнопку дата -конкретный день
       await dayPage.click(); // кликаем и выбираем конкретный день 
       const seanceTime = await page.$("a.movie-seances_time.data-seance-id=178"); // перейти на кнопку время по указанному селектору
@@ -66,9 +64,8 @@ const title = await page.title();
       const booking ="section.buying"; // селекторы кнопки забронировать в неактивном состоянии
       await page.waitForSelector(booking, {visible: false, }); // находит кнопку забронировать в неактивном состоянии
       await booking.click(); // кликаем на кнопку забронировать и ничего не происход
-      const actual = await page.$eval("section.buying", link => link.textContent); // тут остаeмся на странице бронирования мест
       await page.waitForSelector("h2.buying__info-title");
       const title = await page.title();
       expect(title).toContain("Зверополис")
       });
-    
+    }); 
