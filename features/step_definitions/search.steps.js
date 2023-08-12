@@ -1,3 +1,5 @@
+const {Given, When, Before, After}
+= require('cucumber');
 const puppeteer = require("puppeteer");
 const chai = require("chai");
 const expect = chai.expect;
@@ -28,7 +30,7 @@ When("user search by {string}", async function (string) {
 });
 
 Then("user sees the course suggested {string}", async function (string) {
-  const actual = await getText(this.page, "a[data-name]");
+  const actual = await getText(this.page, "h2.ticket__check-title");  // ЭЛЕКТРОННЫЙ БИЛЕТ
   const expected = await string;
   expect(actual).contains(expected);
 });
