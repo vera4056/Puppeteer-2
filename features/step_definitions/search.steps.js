@@ -1,9 +1,7 @@
-const {Given, When, Before, After}
-= require('cucumber');
+const {Given, When, Then, Before, After} = require("@cucumber/cucumber");
 const puppeteer = require("puppeteer");
 const chai = require("chai");
 const expect = chai.expect;
-const { Given, When, Then, Before, After } = require("cucumber");
 const { putText, getText } = require("../../lib/commands.js");
 
 Before(async function () {
@@ -19,18 +17,29 @@ After(async function () {
   }
 });
 
-Given("user is on {string} page", async function (string) {
-  return await this.page.goto(`qamid.tmweb.ru.../index.php${string}`, {
-    setTimeout: 20000,
+Given('user is on {string} page', {timeout: 6000 }, async function (string) {
+  return await this.page.goto('http://qamid.tmweb.ru/client/index.php${string}', { timeout: 6000});
+});
+When('user chooses {string} day of show', async function (string) {
+  return await putText(page, "a.page-nav__day:nth-child(3)", string);
+});
+And('user chooses {string} show time', async function (string) {
+  return await putText(page, "a.movie-seances__time", string);
+});
+And('user selects seat {int} in the row {int}', async function (int, int2) {
+  int = 3;
+  int2 = 3; 
+  return await getText(page, ".buying-scheme", int, int2);
   });
-});
+  
+And('user clicks {string}', async function (string) {
+    return await getText(page, ".buying-scheme", string);
+  });
+And('user clicks {string}', async function (string) {
+    return await getText(page, ".buying-scheme", string);
+  });
 
-When("user search by {string}", async function (string) {
-  return await putText(this.page, "input", string);
-});
-
-Then("user sees the course suggested {string}", async function (string) {
-  const actual = await getText(this.page, "h2.ticket__check-title");  // ЭЛЕКТРОННЫЙ БИЛЕТ
-  const expected = await string;
-  expect(actual).contains(expected);
-});
+Then('users sees a header {"Электронный билет"}', async function (string) {
+   const actual = await getText(page, 'h2', string);
+   expect(actual).contain("Электронный билет");
+  });

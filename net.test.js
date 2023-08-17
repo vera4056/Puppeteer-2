@@ -55,3 +55,6 @@ describe("qamid.tmweb.ru tests", () => {
     expect(error).toContain("Забронировать");
     });
   }); 
+
+ 
+  
